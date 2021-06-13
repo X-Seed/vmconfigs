@@ -1,0 +1,1 @@
+echo "frame_rate_limiter=0"          > /sys/bus/mdev/devices/12345678-1234-1234-1234-12345678910a/nvidia/vgpu_params
