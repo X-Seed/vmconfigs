@@ -1,0 +1,4 @@
+mdevctl start \
+-u 6f5c498f-fd3d-4fcc-8887-98797b38fcd6 \
+-p 0000:82:00.0 \
+-t nvidia-261

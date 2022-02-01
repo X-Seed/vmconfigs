@@ -1,1 +1,1 @@
-echo "frame_rate_limiter=0"          > /sys/bus/mdev/devices/12345678-1234-1234-1234-12345678910a/nvidia/vgpu_params
+echo "frame_rate_limiter=0" > /sys/bus/mdev/devices/6f5c498f-fd3d-4fcc-8887-98797b38fcd5/nvidia/vgpu_params

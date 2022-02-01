@@ -6,20 +6,34 @@
       <libosinfo:os id="http://microsoft.com/win/10"/>
     </libosinfo:libosinfo>
   </metadata>
-  <memory unit='KiB'>12288000</memory>
-  <currentMemory unit='KiB'>12288000</currentMemory>
+  <memory unit='KiB'>52428800</memory>
+  <currentMemory unit='KiB'>52428800</currentMemory>
   <memoryBacking>
     <hugepages/>
+    <access mode='shared'/>
   </memoryBacking>
-  <vcpu placement='static'>4</vcpu>
+  <vcpu placement='static'>17</vcpu>
   <iothreads>1</iothreads>
   <cputune>
-    <vcpupin vcpu='0' cpuset='7'/>
-    <vcpupin vcpu='1' cpuset='8'/>
-    <vcpupin vcpu='2' cpuset='9'/>
-    <vcpupin vcpu='3' cpuset='10'/>
-    <emulatorpin cpuset='11'/>
-    <iothreadpin iothread='1' cpuset='11'/>
+    <vcpupin vcpu='0' cpuset='6'/>
+    <vcpupin vcpu='1' cpuset='7'/>
+    <vcpupin vcpu='2' cpuset='8'/>
+    <vcpupin vcpu='3' cpuset='9'/>
+    <vcpupin vcpu='4' cpuset='10'/>
+    <vcpupin vcpu='5' cpuset='11'/>
+    <vcpupin vcpu='6' cpuset='12'/>
+    <vcpupin vcpu='7' cpuset='13'/>
+    <vcpupin vcpu='8' cpuset='14'/>
+    <vcpupin vcpu='9' cpuset='15'/>
+    <vcpupin vcpu='10' cpuset='16'/>
+    <vcpupin vcpu='11' cpuset='17'/>
+    <vcpupin vcpu='12' cpuset='18'/>
+    <vcpupin vcpu='13' cpuset='19'/>
+    <vcpupin vcpu='14' cpuset='20'/>
+    <vcpupin vcpu='15' cpuset='21'/>
+    <vcpupin vcpu='16' cpuset='22'/>
+    <emulatorpin cpuset='23'/>
+    <iothreadpin iothread='1' cpuset='23'/>
   </cputune>
   <os>
     <type arch='x86_64' machine='pc-q35-4.2'>hvm</type>
@@ -44,7 +58,10 @@
     <vmport state='off'/>
   </features>
   <cpu mode='host-passthrough' check='partial' migratable='on'>
-    <topology sockets='1' dies='1' cores='4' threads='1'/>
+    <topology sockets='1' dies='1' cores='17' threads='1'/>
+    <numa>
+      <cell id='0' cpus='0-16' memory='52428800' unit='KiB' memAccess='shared'/>
+    </numa>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -62,17 +79,23 @@
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='raw'/>
+      <driver name='qemu' type='raw' discard='unmap'/>
       <source file='/vmDisk/win10_2.img'/>
-      <target dev='vdb' bus='virtio'/>
-      <address type='pci' domain='0x0000' bus='0x07' slot='0x00' function='0x0'/>
+      <target dev='vdb' bus='scsi'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='1'/>
+    </disk>
+    <disk type='block' device='disk'>
+      <driver name='qemu' type='raw' cache='none' io='native'/>
+      <source dev='/dev/sdf1'/>
+      <target dev='sde' bus='scsi'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='4'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
-      <source file='/home/linh/Downloads/nvidia-driver.iso'/>
-      <target dev='sda' bus='sata'/>
+      <source file='/home/linh/Downloads/Bliss-v11.13--OFFICIAL-20201113-1525_x86_64_k-k4.19.122-ax86-ga-rmi_m-20.1.0-llvm90_dgc-t3_gms_intelhd.iso'/>
+      <target dev='sdc' bus='sata'/>
       <readonly/>
-      <address type='drive' controller='0' bus='0' target='0' unit='0'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='2'/>
     </disk>
     <controller type='usb' index='0' model='qemu-xhci' ports='15'>
       <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
@@ -121,13 +144,31 @@
       <target chassis='8' port='0x17'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x7'/>
     </controller>
+    <controller type='pci' index='9' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='9' port='0x18'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </controller>
+    <controller type='pci' index='10' model='pcie-to-pci-bridge'>
+      <model name='pcie-pci-bridge'/>
+      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
+    </controller>
     <controller type='virtio-serial' index='0'>
       <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
     </controller>
-    <interface type='bridge'>
+    <controller type='scsi' index='0' model='virtio-scsi'>
+      <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
+    </controller>
+    <filesystem type='mount' accessmode='passthrough'>
+      <driver type='virtiofs'/>
+      <source dir='/GamesCenter'/>
+      <target dir='gamesCenter'/>
+      <address type='pci' domain='0x0000' bus='0x09' slot='0x00' function='0x0'/>
+    </filesystem>
+    <interface type='network'>
       <mac address='52:54:00:c6:19:c4'/>
-      <source bridge='linhbr'/>
-      <model type='virtio'/>
+      <source network='default'/>
+      <model type='virtio-net-pci'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
     <channel type='spicevmc'>
@@ -141,6 +182,7 @@
       <image compression='off'/>
       <gl enable='no'/>
     </graphics>
+    <audio id='1' type='spice'/>
     <video>
       <model type='virtio' heads='1' primary='yes'>
         <acceleration accel3d='yes'/>
@@ -149,9 +191,9 @@
     </video>
     <hostdev mode='subsystem' type='mdev' managed='no' model='vfio-pci' display='off'>
       <source>
-        <address uuid='6f5c498f-fd3d-4fcc-8887-98797b38fcd5'/>
+        <address uuid='6f5c498f-fd3d-4fcc-8887-98797b38fcd6'/>
       </source>
-      <address type='pci' domain='0x0000' bus='0x08' slot='0x00' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x07' slot='0x00' function='0x0'/>
     </hostdev>
     <redirdev bus='usb' type='spicevmc'>
       <address type='usb' bus='0' port='1'/>
